@@ -21,7 +21,7 @@ docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
 def printc(s,color):
-    print(f"{Color[color]}{s}{Color['END']}")
+    print(f"{Color.colors[color]}{s}{Color.colors['END']}")
 
 def create_csr_matrix(filename,header=3,verbose=False):
 
