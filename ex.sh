@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=20
 #SBATCH --time=10:00
-#SBATCH --partition=hpc
+#SBATCH --partition=himem
 
 cd /home/m226252/kcluster 
-python3 execute.py
+python3 naive.py

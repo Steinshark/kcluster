@@ -1,71 +1,12 @@
 parsing dataset of len: 69679427
 rows: 300000, cols:102660
-0 ways through
-1000000 ways through
-2000000 ways through
-3000000 ways through
-4000000 ways through
-5000000 ways through
-6000000 ways through
-7000000 ways through
-8000000 ways through
-9000000 ways through
-10000000 ways through
-11000000 ways through
-12000000 ways through
-13000000 ways through
-14000000 ways through
-15000000 ways through
-16000000 ways through
-17000000 ways through
-18000000 ways through
-19000000 ways through
-20000000 ways through
-21000000 ways through
-22000000 ways through
-23000000 ways through
-24000000 ways through
-25000000 ways through
-26000000 ways through
-27000000 ways through
-28000000 ways through
-29000000 ways through
-30000000 ways through
-31000000 ways through
-32000000 ways through
-33000000 ways through
-34000000 ways through
-35000000 ways through
-36000000 ways through
-37000000 ways through
-38000000 ways through
-39000000 ways through
-40000000 ways through
-41000000 ways through
-42000000 ways through
-43000000 ways through
-44000000 ways through
-45000000 ways through
-46000000 ways through
-47000000 ways through
-48000000 ways through
-49000000 ways through
-50000000 ways through
-51000000 ways through
-52000000 ways through
-53000000 ways through
-54000000 ways through
-55000000 ways through
-56000000 ways through
+[94mattempting construction of matr: (300001,102661)[0m
+finished building matrix (300001, 102661) in 0.38582587242126465 seconds
 Traceback (most recent call last):
-  File "execute.py", line 38, in <module>
-    read_data_to_df(docNYT,header=3)
-  File "execute.py", line 30, in read_data_to_df
-    matrix[int(doc),int(word)] = int(count)
-  File "/data/apps/anaconda3/2019.07/lib/python3.7/site-packages/scipy/sparse/lil.py", line 344, in __setitem__
-    return self._set_intXint(key[0], key[1], x)
-  File "/data/apps/anaconda3/2019.07/lib/python3.7/site-packages/scipy/sparse/lil.py", line 314, in _set_intXint
-    self.data, row, col, x)
-  File "_csparsetools.pyx", line 63, in scipy.sparse._csparsetools.lil_insert
-  File "_csparsetools.pyx", line 89, in scipy.sparse._csparsetools.lil_insert
-IndexError: column index (102660) out of bounds
+  File "naive.py", line 89, in <module>
+    U, S, Vt = svd(matrix)
+  File "/data/apps/anaconda3/2019.07/lib/python3.7/site-packages/scipy/linalg/decomp_svd.py", line 125, in svd
+    compute_uv=compute_uv, full_matrices=full_matrices)
+  File "/data/apps/anaconda3/2019.07/lib/python3.7/site-packages/scipy/linalg/lapack.py", line 771, in _compute_lwork
+    raise ValueError("Too large work array required -- computation cannot "
+ValueError: Too large work array required -- computation cannot be performed with standard 32-bit LAPACK.
