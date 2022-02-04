@@ -23,7 +23,7 @@ vocabNYT    = fr'vocab.nytimes.txt'
 def printc(s,color):
     print(f"{Color.colors[color]}{s}{Color.colors['END']}")
 
-def create_csr_matrix(filename,header=3,verbose=False):
+def create_matrix(filename,header=3,verbose=False):
 
     # Import our NYTIMES doc and read the init values
     with open(filename,'r') as file:
@@ -83,7 +83,12 @@ if __name__ == "__main__":
     ############################################################################
     ################## Calculate the SVD for the matrix ########################
     ############################################################################
-    U, S, Vt = svd(matrix, lapack_driver='gesvd')
+    try:
+        U, S, Vt = svd(matrix, lapack_driver='gesvd')
+    except MemoryError m:
+        printc(m,"RED")
+        exit()
+
     printc(f"finished building SVD in {time()-t2} seconds", "GREEN")
     printc(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","TAN")
 
