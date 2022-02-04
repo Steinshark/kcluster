@@ -76,7 +76,7 @@ if __name__ == "__main__":
     #### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
     ############################################################################
     t1 = time()
-    matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
+    matrix, docwords = create_matrix(docNYT,header=3,verbose=True)
     t2 = time()
     printc(f"finished building matrix {matrix.shape} in {t2-t1} seconds", "GREEN")
 
