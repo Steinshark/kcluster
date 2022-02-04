@@ -20,6 +20,9 @@ from colors import *
 docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
+def printc(s,color):
+    print(f"{Color[color]}{s}{Color['END']}")
+
 def create_csr_matrix(filename,header=3,verbose=False):
 
     # Import our NYTIMES doc and read the init values
@@ -27,11 +30,6 @@ def create_csr_matrix(filename,header=3,verbose=False):
         n_articles      = int(file.readline())
         n_words         = int(file.readline())
         n_words_total   = int(file.readline())
-
-        # Update us on whats going on
-        if verbose:
-            print(f"parsing dataset of len: {n_words_total}")
-            print(f"rows: {n_articles}, cols:{n_words}")
 
             # Create a dictionary so we can map word_ID to actual text in the NYTIMES doc
             vocab = {}
@@ -42,7 +40,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
                     # define the size of the dataset we will build
                     rows = n_articles	+	1
                     cols = n_words		+	1
-                    print(f"{Color.BLUE}attempting construction of matr: ({rows},{cols}){Color.END}")
+                    printc(f"attempting construction of matr: ({rows},{cols})","BLUE")
                     # initialize an lil matrix (faster to fill)
                     matrix = lil_matrix((rows,cols), dtype = np.float64)
 
@@ -80,15 +78,14 @@ if __name__ == "__main__":
     t1 = time()
     matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
     t2 = time()
-    print(f"finished building matrix {matrix.shape} in {t2-t1} seconds")
-
+    printc(f"finished building matrix {matrix.shape} in {t2-t1} seconds", "GREEN")
 
     ############################################################################
     ################## Calculate the SVD for the matrix ########################
     ############################################################################
-    U, S, Vt = svd(matrix)
-    print(f"finished building SVD in {time()-t2} seconds")
-    print(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}")
+    U, S, Vt = svd(matrix, lapack_driver='gesvd')
+    printc(f"finished building SVD in {time()-t2} seconds", "GREEN")
+    printc(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","TAN")
 
     ############################################################################
     ################### Dimensional Reduction via SVD  #########################
