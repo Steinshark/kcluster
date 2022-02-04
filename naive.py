@@ -42,7 +42,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
                     # define the size of the dataset we will build
                     rows = n_articles	+	1
                     cols = n_words		+	1
-                    print(f"{Color.BLUE}attempting construction of matr: ({rows},{cols}){Color.END}")
+                    #print(f"{Color.BLUE}attempting construction of matr: ({rows},{cols}){Color.END}")
                     # initialize an lil matrix (faster to fill)
                     matrix = lil_matrix((rows,cols), dtype = np.float64)
 
