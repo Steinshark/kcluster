@@ -11,11 +11,13 @@ from sklearn.decomposition import PCA
 
 from matplotlib import pyplot as plt
 from time import time
-path        = r'/mnt/beegfs/m226252/clustering'
-docNYT      = fr'{path}/docword.nytimes.txt'
+
+from colors import *
+#path        = r'/mnt/beegfs/m226252/clustering'
+#docNYT      = fr'{path}/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
 #docNYT      = fr'newData'
-#docNYT	     = fr"docword.nytimes.txt"
+docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
 def create_csr_matrix(filename,header=3,verbose=False):
@@ -40,7 +42,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
 		# define the size of the dataset we will build
 		rows = n_articles	+	1
 		cols = n_words		+	1
-
+        print(f"{Color.BLUE}attempting construction of matr: ({rows},{cols}){Color.END}")
 		# initialize an lil matrix (faster to fill)
 		matrix = lil_matrix((rows,cols), dtype = np.float64)
 
