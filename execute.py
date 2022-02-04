@@ -3,12 +3,16 @@ import numpy as np
 import pandas as pd
 from scipy.sparse import lil_matrix, csr_matrix
 from sklearn.decomposition import PCA
-from numpy.linalg import svd, LinAlgError
 from copy import copy
-
-path        = r'/mnt/beegfs/m226252/clustering'
-docNYT      = fr'{path}/docword.nytimes.txt'
-vocabNYT    = fr'{path}/vocab.nytimes.txt'
+from scipy.sparse.linalg import svds
+from matplotlib import pyplot as plt
+from time import time
+#path        = r'/mnt/beegfs/m226252/clustering'
+#docNYT      = fr'{path}/docword.nytimes.txt'
+#vocabNYT    = fr'{path}/vocab.nytimes.txt'
+#docNYT      = fr'newData'
+docNYT	     = fr"docword.nytimes.txt"
+vocabNYT    = fr'vocab.nytimes.txt'
 
 def create_csr_matrix(filename,header=3,verbose=False):
 
@@ -34,34 +38,35 @@ def create_csr_matrix(filename,header=3,verbose=False):
 		cols = n_words		+	1
 
 		# initialize an lil matrix (faster to fill)
-		matrix = lil_matrix((rows,cols), dtype = np.float64)
+		matrix = lil_matrix((rows,cols), dtype = np.int32)
 
 
 		# Step through each article and see which word appeared in it
-		for i, line in enumerate(file.readlines()):
+		doc_to_words = {}
+		for line in file.readlines():
 			doc, word, count = line.split(' ')
+			#input(f"doc: {doc}, word: {word}, count: {count}")
 			matrix[int(doc),int(word)] = int(count)
+			try:
+				doc_to_words[int(doc)].append(int(count))
+			except KeyError:
+				doc_to_words[int(doc)] = [int(count)]
 
-			# Update
-			if verbose and i % 1000000 == 0:
-				print(f"{i} ways through")
+	return matrix.tocsr()
 
-		return csr_matrix(matrix)
-
+def tf_calc(csr_matr):
+	strs = []
+	print(csr_matr.shape[0])
+	for i in range(csr_matr.shape[0]):
+		strs.append(' '.join(map(str,[i for i,x in enumerate(csr_matr[i].toarray()[0]) if not x == 0])))
+	print(strs[:20])
+def SVD_decomp(csr_matr,k=100):
+	return svds(sparse_matrix,k=150)
 if __name__ == "__main__":
 	# build our sparce matrix
+	t1 = time()
 	sparse_matrix = create_csr_matrix(docNYT,header=3,verbose=True)
-
-	# Try to get the SVD directly
-	try:
-		U,S,Vh = svd(sparse_matrix)
-		sPrime = S[0:-1:100].copy()
-
-		x_sPrime = np.arrange(sPrime.size)
-
-		plt.plot(x_sPrime,sPrime)
-		plt.show() 
-	except LinAlgError as l:
-		print(l)
-	except Exception as e:
-		print(e)
+	t2 = time()
+	print(f"finished building matrix in {t2-t1} seconds")
+	U, S, Vh = svds(sparse_matrix,k=150)
+	print(f"finished building SVD in {time()-t2} seconds")
