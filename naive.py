@@ -42,7 +42,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
                     # define the size of the dataset we will build
                     rows = n_articles	+	1
                     cols = n_words		+	1
-                    #print(f"{Color.BLUE}attempting construction of matr: ({rows},{cols}){Color.END}")
+                    print(f"{Color.BLUE}attempting construction of matr: ({rows},{cols}){Color.END}")
                     # initialize an lil matrix (faster to fill)
                     matrix = lil_matrix((rows,cols), dtype = np.float64)
 
@@ -73,40 +73,40 @@ def create_csr_matrix(filename,header=3,verbose=False):
                                         return svds(sparse_matrix,k=150)
 
 
-                                        if __name__ == "__main__":
-                                            ############################################################################
-                                            #### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
-                                            ############################################################################
-                                            t1 = time()
-                                            matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
-                                            t2 = time()
-                                            print(f"finished building matrix {matrix.shape} in {t2-t1} seconds")
+if __name__ == "__main__":
+    ############################################################################
+    #### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
+    ############################################################################
+    t1 = time()
+    matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
+    t2 = time()
+    print(f"finished building matrix {matrix.shape} in {t2-t1} seconds")
 
 
-                                            ############################################################################
-                                            ################## Calculate the SVD for the matrix ########################
-                                            ############################################################################
-                                            U, S, Vt = svd(matrix)
-                                            print(f"finished building SVD in {time()-t2} seconds")
-                                            print(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}")
+    ############################################################################
+    ################## Calculate the SVD for the matrix ########################
+    ############################################################################
+    U, S, Vt = svd(matrix)
+    print(f"finished building SVD in {time()-t2} seconds")
+    print(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}")
 
-                                            ############################################################################
-                                            ################### Dimensional Reduction via SVD  #########################
-                                            ############################################################################
+    ############################################################################
+    ################### Dimensional Reduction via SVD  #########################
+    ############################################################################
 
-                                            n, k = sparse_matrix.shape
+    n, k = sparse_matrix.shape
 
 
-                                            mean_square_errors = np.zeros((k,1))
-                                            sPrime = np.copy(S)
-                                            Sigma = np.zeros((n,k))
+    mean_square_errors = np.zeros((k,1))
+    sPrime = np.copy(S)
+    Sigma = np.zeros((n,k))
 
-                                            for i in range(20,1,-1):
-                                                sPrime[i] = 0
-                                                Sigma[0:k,0:k] = np.diag(sPrime)
-                                                print(f"MULT-- U: {U.shape}, S: {Sigma.shape}, Vt: {Vt.shape}")
-                                                Ap1 = U@Sigma@Vt
-                                                mean_square_errors[i] = mean_squared_error(matrix,Ap1,squared=False)
+    for i in range(20,1,-1):
+        sPrime[i] = 0
+        Sigma[0:k,0:k] = np.diag(sPrime)
+        print(f"MULT-- U: {U.shape}, S: {Sigma.shape}, Vt: {Vt.shape}")
+        Ap1 = U@Sigma@Vt
+        mean_square_errors[i] = mean_squared_error(matrix,Ap1,squared=False)
 
-                                                # plot our data
-                                                print(mean_square_errors)
+        # plot our data
+        print(mean_square_errors)
