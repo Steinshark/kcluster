@@ -86,6 +86,7 @@ if __name__ == "__main__":
     try:
         U, S, Vt = svd(matrix, lapack_driver='gesvd')
     except MemoryError as m:
+        printc(f"failed after {time()-t2}","RED")
         printc(m,"RED")
         exit()
 
