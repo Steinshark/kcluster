@@ -1,20 +1,17 @@
 
 import numpy as np
 import pandas as pd
-
 from scipy.sparse import lil_matrix, csr_matrix
-from scipy.sparse.linalg import svds
-
-from sklearn.metrics import mean_squared_error
 from sklearn.decomposition import PCA
-
+from copy import copy
+from scipy.sparse.linalg import svds
 from matplotlib import pyplot as plt
 from time import time
 #path        = r'/mnt/beegfs/m226252/clustering'
 #docNYT      = fr'{path}/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-docNYT      = fr'newData'
-#docNYT	     = fr"docword.nytimes.txt"
+#docNYT      = fr'newData'
+docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
 def create_csr_matrix(filename,header=3,verbose=False):
@@ -71,46 +68,12 @@ def SVD_decomp(csr_matr,k=100):
 
 
 if __name__ == "__main__":
-	############################################################################
-	#### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
-	############################################################################
+	# build our sparce matrix and a dictionary of docID -> words_in_doc
 	t1 = time()
 	sparse_matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
 	t2 = time()
 	print(f"finished building matrix {sparse_matrix.shape} in {t2-t1} seconds")
 
-
-	############################################################################
-	################## Calculate the SVD for the matrix ########################
-	############################################################################
-	U, S, Vt = svds(sparse_matrix,k=sparse_matrix.shape[0]-1)
-	input(f"finished building SVD in {time()-t2} seconds")
-	print(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}")
-
-	############################################################################
-	################### Dimensional Reduction via SVD  #########################
-	############################################################################
-
-	rows, cols = sparse_matrix.shape
-	k = int(input("start k at: "))
-
-
-	mean_square_errors = np.zeros((cols,1))
-	sPrime = np.copy(S)
-	Sigma = np.zeros((rows,cols))
-
-	for i in range(cols-1,0,-5):
-		sPrime[i] = 0
-		Sigma[0:cols,0:cols] = np.diag(sPrime)
-		print(f"MULT-- U: {U.shape}, S: {Sigma.shape}, Vt: {Vt.shape}")
-		Ap1=U@Sigma@Vt
-		mean_square_errors[i] = mean_squared_error(sparse_matrix.toarray(),Ap1,squared=False)
-		print(f"mse: {mean_square_errors[i]}")
-
-	# plot our data
-	print(mean_square_errors)
-	input()
-	plt.plot(range(1,cols),mean_square_errors[1:cols])
-	plt.ylabel('RMSE of reconstruction')
-	plt.xlabel('Singular values kept')
-	plt.show()
+	# Calculate the SVD for the matrix
+	U, S, Vt = svds(sparse_matrix,k=100)
+	print(f"finished building SVD in {time()-t2} seconds")

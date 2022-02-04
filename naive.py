@@ -4,6 +4,7 @@ import pandas as pd
 
 from scipy.sparse import lil_matrix, csr_matrix
 from scipy.sparse.linalg import svds
+from scipy.linalg import svd
 
 from sklearn.metrics import mean_squared_error
 from sklearn.decomposition import PCA
@@ -55,7 +56,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
 			except KeyError:
 				docwords[int(doc)] = [int(count)]
 
-	return matrix.tocsr(), docwords
+	return matrix.todense(), docwords
 
 
 def tf_calc(csr_matr):
@@ -75,42 +76,35 @@ if __name__ == "__main__":
 	#### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
 	############################################################################
 	t1 = time()
-	sparse_matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
+	matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
 	t2 = time()
-	print(f"finished building matrix {sparse_matrix.shape} in {t2-t1} seconds")
+	print(f"finished building matrix {matrix.shape} in {t2-t1} seconds")
 
 
 	############################################################################
 	################## Calculate the SVD for the matrix ########################
 	############################################################################
-	U, S, Vt = svds(sparse_matrix,k=sparse_matrix.shape[0]-1)
-	input(f"finished building SVD in {time()-t2} seconds")
+	U, S, Vt = svd(matrix)
+	print(f"finished building SVD in {time()-t2} seconds")
 	print(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}")
 
 	############################################################################
 	################### Dimensional Reduction via SVD  #########################
 	############################################################################
 
-	rows, cols = sparse_matrix.shape
-	k = int(input("start k at: "))
+	n, k = sparse_matrix.shape
 
 
-	mean_square_errors = np.zeros((cols,1))
+	mean_square_errors = np.zeros((k,1))
 	sPrime = np.copy(S)
-	Sigma = np.zeros((rows,cols))
+	Sigma = np.zeros((n,k))
 
-	for i in range(cols-1,0,-5):
+	for i in range(20,1,-1):
 		sPrime[i] = 0
-		Sigma[0:cols,0:cols] = np.diag(sPrime)
+		Sigma[0:k,0:k] = np.diag(sPrime)
 		print(f"MULT-- U: {U.shape}, S: {Sigma.shape}, Vt: {Vt.shape}")
-		Ap1=U@Sigma@Vt
-		mean_square_errors[i] = mean_squared_error(sparse_matrix.toarray(),Ap1,squared=False)
-		print(f"mse: {mean_square_errors[i]}")
+		Ap1 = U@Sigma@Vt
+		mean_square_errors[i] = mean_squared_error(matrix,Ap1,squared=False)
 
 	# plot our data
 	print(mean_square_errors)
-	input()
-	plt.plot(range(1,cols),mean_square_errors[1:cols])
-	plt.ylabel('RMSE of reconstruction')
-	plt.xlabel('Singular values kept')
-	plt.show()
