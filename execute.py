@@ -14,9 +14,9 @@ from time import time
 
 from colors import *
 #path        = r'/mnt/beegfs/m226252/clustering'
-#docNYT      = fr'{path}/docword.nytimes.txt'
+docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-docNYT      = fr'newData'
+#docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
@@ -114,9 +114,10 @@ if __name__ == "__main__":
 	############################################################################
 	cluster_sizes = range(5,6)
 	t6 = time()
-	printc(f"RUnning KMeans clustering on matrix ({matrix_transform.shape}) for {cluster_sizes}")
+	printc(f"RUnning KMeans clustering on matrix ({type(matrix_transform)}) for {cluster_sizes}","BLUE")
 	for k in cluster_sizes:
 		model = MiniBatchKMeans(n_clusters=k, batch_size = bSize)
 		model.fit(matrix)
 		#for batch in [0,1,2,3,4,5]:
 		#	model.partial_fit(matrix)
+		plt.scatter()
