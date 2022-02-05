@@ -102,7 +102,7 @@ if __name__ == "__main__":
 	print(f'{Color.colors["TAN"]}PCA reduction size: {redux} {Color.colors["END"]}')
 	printc(f"Beginning PCA...","BLUE")
 	pca = SparsePCA(n_components=redux)
-	matrix_transform = pca.fit_transform(matrix)
+	matrix_transform = pca.fit(matrix)
 	err = pca.explained_variance_ratio_
 	t5 = time()
 	printc(f"finished PCA in {t5-t4} seconds","GREEN")
