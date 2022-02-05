@@ -10,12 +10,17 @@ from sklearn.decomposition import PCA
 
 from matplotlib import pyplot as plt
 from time import time
+
+from colors import *
 #path        = r'/mnt/beegfs/m226252/clustering'
 #docNYT      = fr'{path}/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
 docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
+
+def printc(s,color):
+    print(f"{Color.colors[color]}{s}{Color.colors['END']}")
 
 def create_csr_matrix(filename,header=3,verbose=False):
 
@@ -75,42 +80,26 @@ if __name__ == "__main__":
 	#### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
 	############################################################################
 	t1 = time()
-	sparse_matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
+	matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
 	t2 = time()
-	print(f"finished building matrix {sparse_matrix.shape} in {t2-t1} seconds")
+	printc(f"finished building matrix {matrix.shape} in {t2-t1} seconds","GREEN")
 
 
 	############################################################################
 	################## Calculate the SVD for the matrix ########################
 	############################################################################
-	U, S, Vt = svds(sparse_matrix,k=sparse_matrix.shape[0]-1)
-	input(f"finished building SVD in {time()-t2} seconds")
-	print(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}")
+	printc(f"Starting SVD CALC","BLUE")
+	U, S, Vt = svds(matrix,k=100)
+	t3 = time()
+	printc(f"finished building SVD in {t3-t2} seconds","GREEN")
+	printc(f"U: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","BLUE")
 
 	############################################################################
-	################### Dimensional Reduction via SVD  #########################
+	################### Dimensional Reduction via PCA  #########################
 	############################################################################
-
-	rows, cols = sparse_matrix.shape
-	k = int(input("start k at: "))
-
-
-	mean_square_errors = np.zeros((cols,1))
-	sPrime = np.copy(S)
-	Sigma = np.zeros((rows,cols))
-
-	for i in range(cols-1,0,-5):
-		sPrime[i] = 0
-		Sigma[0:cols,0:cols] = np.diag(sPrime)
-		print(f"MULT-- U: {U.shape}, S: {Sigma.shape}, Vt: {Vt.shape}")
-		Ap1=U@Sigma@Vt
-		mean_square_errors[i] = mean_squared_error(sparse_matrix.toarray(),Ap1,squared=False)
-		print(f"mse: {mean_square_errors[i]}")
-
-	# plot our data
-	print(mean_square_errors)
-	input()
-	plt.plot(range(1,cols),mean_square_errors[1:cols])
-	plt.ylabel('RMSE of reconstruction')
-	plt.xlabel('Singular values kept')
-	plt.show()
+	t4 = time()
+	input(f'{Color.colors["TAN"]}PCA reduction size: {Color.colors["END"]}')
+	printc(f"Beginning PCA...","BLUE")
+	matrix_reduced = PCA()
+	t5 = time()
+	printc(f"finished PCA in {t5-t4} seconds","GREEN")
