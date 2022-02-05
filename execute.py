@@ -6,7 +6,7 @@ from scipy.sparse import lil_matrix, csr_matrix
 from scipy.sparse.linalg import svds
 
 from sklearn.metrics import mean_squared_error
-from sklearn.decomposition import SparsePCA, IncrementalPCA
+from sklearn.decomposition import SparsePCA, IncrementalPCA, TruncatedSVD
 from sklearn.cluster import MiniBatchKMeans
 
 from matplotlib import pyplot as plt
@@ -14,9 +14,9 @@ from time import time
 
 from colors import *
 #path        = r'/mnt/beegfs/m226252/clustering'
-#docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
+docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-docNYT      = fr'newData'
+#docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
@@ -68,12 +68,18 @@ def create_csr_matrix(filename,header=3,verbose=False):
     return matrix.tocsr(), docwords
 
 
-def tf_calc(csr_matr):
-    strs = []
-    print(csr_matr.shape[0])
-    for i in range(csr_matr.shape[0]):
-    	strs.append(' '.join(map(str,[i for i,x in enumerate(csr_matr[i].toarray()[0]) if not x == 0])))
-    print(strs[:20])
+def svd_calc(sparse_matrix,k=150,verbose=False):
+    if verbose:
+        printc(f"Starting: SVD CALC","BLUE")
+        printc(f"\tk value: {k}\n\tmatrix dim: {sparse_matrix.shape}\n\tmatrix size: {matrix.data.size/(1024**2):.2f} MB","TAN")
+
+    U, S, Vt = svds(matrix,k=k)
+
+    if verbose:
+        t3 = time()
+        printc(f"\tU: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","TAN")
+        printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
+    return U,S,Vt
 
 
 if __name__ == "__main__":
@@ -93,44 +99,40 @@ if __name__ == "__main__":
     ############################################################################
     ################## Calculate the SVD for the matrix ########################
     ############################################################################
-    printc(f"Starting: SVD CALC","BLUE")
-    k = 150
-    printc(f"\tUsing k value of {k}","TAN")
 
-    U, S, Vt = svds(matrix,k=k)
-    t3 = time()
-    printc(f"\tU: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","TAN")
-    printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
+    #U, S, Vt = svd_calc(matrix,k=50,verbose=True)
 
     ############################################################################
     ################### Dimensional Reduction via PCA  #########################
     ############################################################################
-    t4 = time()
-    redux = 100
-    bSize = 50000
-    printc(f"Starting PCA","BLUE")
-    print(f'{Color.colors["TAN"]}\tPCA reduction to {redux} {Color.colors["END"]}')
-    pca = IncrementalPCA(n_components=redux,batch_size=bSize)
-    for i in [0,1,2,3,4,5]:
-        matrix_transform = pca.fit(matrix)
-    err = pca.explained_variance_ratio_
-    t5 = time()
-    printc(f"\tfinished PCA in {t5-t4} seconds\n\n","GREEN")
-    #printc(f"PCA evr: {err}\n\n","GREEN")
+    printc(f"Starting: reduction via SVD","BLUE")
+
+    tsvd = TruncatedSVD(n_components=100)
+    a = tsvd.fit_transform(matrix)
+    printc(f"\t{a.shape}","TAN")
+    printc(f"\t{tsvd.explained_variance_ratio_}","TAN")
+    printc(f"\treturned: {type(a)}","TAN")
+
     ############################################################################
-    ################### Dimensional Reduction via PCA  #########################
+    ########################## KMeans analysis  ################################
     ############################################################################
     t6 = time()
-    cluster_sizes = list(range(5,15))
+    bSize = 50000
+
+    cluster_sizes = list(np.arange(1000,5000,500))
     model = [None for _ in cluster_sizes]
     printc(f"Starting KMeans","BLUE")
     printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
     for i,n in enumerate(cluster_sizes):
         t1 = time()
         printc(f"\t\tStarting {i}:","TAN")
-
-    	model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize)
-    	model[i].fit(matrix)
+        model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
+        model[i].fit(a)
         printc(f"\t\tFinished {i} in {time()-t1} seconds:","TAN")
 
-        	printc(f"\tCluster size {i} inertia: {model[i].inertia_}","TAN")
+        printc(f"\t{n} clusters inertia: {model[i].inertia_}","TAN")
+
+
+    ############################################################################
+    ########################### Truncated SVD  #################################
+    ############################################################################
