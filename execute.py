@@ -100,9 +100,10 @@ if __name__ == "__main__":
 	############################################################################
 	t4 = time()
 	redux = 100
+	bSize = 50000
 	print(f'{Color.colors["TAN"]}PCA reduction size: {redux} {Color.colors["END"]}')
 	printc(f"Beginning PCA...","BLUE")
-	pca = IncrementalPCA(n_components=redux)
+	pca = IncrementalPCA(n_components=redux,batchsize=bSize)
 	matrix_transform = pca.fit_transform(matrix)
 	err = pca.explained_variance_ratio_
 	t5 = time()
@@ -114,7 +115,6 @@ if __name__ == "__main__":
 	cluster_sizes = range(5,6)
 	t6 = time()
 	printc(f"RUnning KMeans clustering on matrix ({matrix_transform.shape}) for {cluster_sizes}")
-	bSize = 50000
 	for k in cluster_sizes:
 		model = MiniBatchKMeans(n_clusters=k, batchsize = bSize)
 		model.fit(matrix)
