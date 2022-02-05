@@ -6,7 +6,7 @@ from scipy.sparse import lil_matrix, csr_matrix
 from scipy.sparse.linalg import svds
 
 from sklearn.metrics import mean_squared_error
-from sklearn.decomposition import SparcePCA
+from sklearn.decomposition import SparsePCA
 
 from matplotlib import pyplot as plt
 from time import time
@@ -101,7 +101,7 @@ if __name__ == "__main__":
 	redux = 100
 	print(f'{Color.colors["TAN"]}PCA reduction size: {redux} {Color.colors["END"]}')
 	printc(f"Beginning PCA...","BLUE")
-	pca = SparcePCA(n_components=redux)
+	pca = SparsePCA(n_components=redux)
 	matrix_transform = pca.fit_transform(matrix)
 	err = pca.explained_variance_ratio_
 	t5 = time()
