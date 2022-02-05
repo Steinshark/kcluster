@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=weLoveML:)
+#SBATCH --job-name=we<3ML:)
 #SBATCH --output=out.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=20
