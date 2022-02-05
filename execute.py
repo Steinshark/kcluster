@@ -102,7 +102,7 @@ if __name__ == "__main__":
 	redux = 100
 	bSize = 50000
 	print(f'{Color.colors["TAN"]}PCA reduction size: {redux} {Color.colors["END"]}')
-	printc(f"Beginning PCA...","BLUE")
+	printc(f"Beginning PCA... on type {(type(matrix))}","BLUE")
 	pca = IncrementalPCA(n_components=redux,batch_size=bSize)
 	matrix_transform = pca.fit(matrix)
 	err = pca.explained_variance_ratio_
