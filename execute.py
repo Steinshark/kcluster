@@ -12,10 +12,10 @@ from matplotlib import pyplot as plt
 from time import time
 
 from colors import *
-#path        = r'/mnt/beegfs/m226252/clustering'
-#docNYT      = fr'{path}/docword.nytimes.txt'
+path        = r'/mnt/beegfs/m226252/clustering'
+docNYT      = fr'{path}/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-docNYT      = fr'newData'
+#docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
