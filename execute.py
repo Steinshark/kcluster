@@ -14,9 +14,9 @@ from time import time
 
 from colors import *
 #path        = r'/mnt/beegfs/m226252/clustering'
-docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
+#docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-#docNYT      = fr'newData'
+docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
@@ -63,7 +63,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
 			except KeyError:
 				docwords[int(doc)] = [int(count)]
 		t4 = time()
-		printc(f"\tFinished docword read of {ln_words_total} words in {t4-t3} seconds","TAN")
+		printc(f"\tFinished docword read of {n_words_total} words in {t4-t3} seconds","TAN")
 
 	return matrix.tocsr(), docwords
 
@@ -74,10 +74,6 @@ def tf_calc(csr_matr):
 	for i in range(csr_matr.shape[0]):
 		strs.append(' '.join(map(str,[i for i,x in enumerate(csr_matr[i].toarray()[0]) if not x == 0])))
 	print(strs[:20])
-
-
-def SVD_decomp(csr_matr,k=100):
-	return svds(sparse_matrix,k=150)
 
 
 if __name__ == "__main__":
@@ -115,7 +111,8 @@ if __name__ == "__main__":
 	printc(f"Starting PCA","BLUE")
 	print(f'{Color.colors["TAN"]}\tPCA reduction to {redux} {Color.colors["END"]}')
 	pca = IncrementalPCA(n_components=redux,batch_size=bSize)
-	matrix_transform = pca.fit(matrix)
+    for i in [0,1,2,3,4,5]:
+	       matrix_transform = pca.partial_fit(matrix[bSize*i:bSize*(i+1)])
 	err = pca.explained_variance_ratio_
 	t5 = time()
 	printc(f"\tfinished PCA in {t5-t4} seconds\n\n","GREEN")
