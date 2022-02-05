@@ -110,12 +110,9 @@ if __name__ == "__main__":
     bSize = 50000
     printc(f"Starting PCA","BLUE")
     print(f'{Color.colors["TAN"]}\tPCA reduction to {redux} {Color.colors["END"]}')
-    pca = IncrementalPCA(n_components=redux)
+    pca = IncrementalPCA(n_components=redux,batch_size=bSize)
     for i in [0,1,2,3,4,5]:
-        printc(f"trying to perform on {type(matrix[bSize*i, :bSize*(i+1), ])}","TAN")
-        printc(f"methods avail: {dir(matrix[bSize*i, :bSize*(i+1), ])}","TAN")
-
-        matrix_transform = pca.partial_fit((matrix[bSize*i, :bSize*(i+1), ]).toarray())
+        matrix_transform = pca.fit(matrix)
     err = pca.explained_variance_ratio_
     t5 = time()
     printc(f"\tfinished PCA in {t5-t4} seconds\n\n","GREEN")
