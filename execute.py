@@ -25,55 +25,55 @@ def printc(s,color):
 
 def create_csr_matrix(filename,header=3,verbose=False):
 
-	# Import our NYTIMES doc and read the init values
-	with open(filename,'r') as file:
-		n_articles      = int(file.readline())
-		n_words         = int(file.readline())
-		n_words_total   = int(file.readline())
+    # Import our NYTIMES doc and read the init values
+    with open(filename,'r') as file:
+    	n_articles      = int(file.readline())
+    	n_words         = int(file.readline())
+    	n_words_total   = int(file.readline())
 
 
-		# Create a dictionary so we can map word_ID to actual text in the NYTIMES doc
-		t1 = time()
-		vocab = {}
-		with open(vocabNYT,'r') as vocab_file:
-			for i, word in enumerate(vocab_file.readlines()):
-				vocab[i] = word
-		t2 = time()
-		printc(f"\tFinished vocab read of {len(vocab)} words in {t2-t1} seconds","TAN")
-		# define the size of the dataset we will build
-		rows = n_articles	+	1
-		cols = n_words		+	1
+    	# Create a dictionary so we can map word_ID to actual text in the NYTIMES doc
+    	t1 = time()
+    	vocab = {}
+    	with open(vocabNYT,'r') as vocab_file:
+    		for i, word in enumerate(vocab_file.readlines()):
+    			vocab[i] = word
+    	t2 = time()
+    	printc(f"\tFinished vocab read of {len(vocab)} words in {t2-t1} seconds","TAN")
+    	# define the size of the dataset we will build
+    	rows = n_articles	+	1
+    	cols = n_words		+	1
 
 
-		# initialize an lil matrix (faster to fill)
-		matrix = lil_matrix((rows,cols), dtype = np.float64)
+    	# initialize an lil matrix (faster to fill)
+    	matrix = lil_matrix((rows,cols), dtype = np.float64)
 
 
-		# Step through each article and see which word appeared in it
-		t3 = time()
-		docwords = {}
-		printc(f"\tBegin docword read of {n_words_total} lines","TAN")
+    	# Step through each article and see which word appeared in it
+    	t3 = time()
+    	docwords = {}
+    	printc(f"\tBegin docword read of {n_words_total} lines","TAN")
 
-		for line in file:
-			doc, word, count = line.split(' ')
-			#input(f"doc: {doc}, word: {word}, count: {count}")
-			matrix[int(doc),int(word)] = int(count)
-			try:
-				docwords[int(doc)].append(count)
-			except KeyError:
-				docwords[int(doc)] = [int(count)]
-		t4 = time()
-		printc(f"\tFinished docword read of {n_words_total} words in {t4-t3} seconds","TAN")
+    	for line in file:
+    		doc, word, count = line.split(' ')
+    		#input(f"doc: {doc}, word: {word}, count: {count}")
+    		matrix[int(doc),int(word)] = int(count)
+    		try:
+    			docwords[int(doc)].append(count)
+    		except KeyError:
+    			docwords[int(doc)] = [int(count)]
+    	t4 = time()
+    	printc(f"\tFinished docword read of {n_words_total} words in {t4-t3} seconds","TAN")
 
-	return matrix.tocsr(), docwords
+    return matrix.tocsr(), docwords
 
 
 def tf_calc(csr_matr):
-	strs = []
-	print(csr_matr.shape[0])
-	for i in range(csr_matr.shape[0]):
-		strs.append(' '.join(map(str,[i for i,x in enumerate(csr_matr[i].toarray()[0]) if not x == 0])))
-	print(strs[:20])
+    strs = []
+    print(csr_matr.shape[0])
+    for i in range(csr_matr.shape[0]):
+    	strs.append(' '.join(map(str,[i for i,x in enumerate(csr_matr[i].toarray()[0]) if not x == 0])))
+    print(strs[:20])
 
 
 if __name__ == "__main__":
@@ -133,4 +133,4 @@ if __name__ == "__main__":
     	model[i].fit(matrix)
         printc(f"\t\tFinished {i} in {time()-t1} seconds:","TAN")
 
-    	printc(f"\tCluster size {i} inertia: {model[i].inertia_}","TAN")
+        	printc(f"\tCluster size {i} inertia: {model[i].inertia_}","TAN")
