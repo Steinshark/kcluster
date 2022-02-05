@@ -12,10 +12,10 @@ from matplotlib import pyplot as plt
 from time import time
 
 from colors import *
-path        = r'/mnt/beegfs/m226252/clustering'
-docNYT      = fr'{path}/docword.nytimes.txt'
+#path        = r'/mnt/beegfs/m226252/clustering'
+#docNYT      = fr'{path}/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-#docNYT      = fr'newData'
+docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
@@ -98,8 +98,16 @@ if __name__ == "__main__":
 	################### Dimensional Reduction via PCA  #########################
 	############################################################################
 	t4 = time()
-	print(f'{Color.colors["TAN"]}PCA reduction size: {Color.colors["END"]}')
+	redux = 100
+	print(f'{Color.colors["TAN"]}PCA reduction size: {redux} {Color.colors["END"]}')
 	printc(f"Beginning PCA...","BLUE")
-	matrix_reduced = PCA()
+	pca = PCA(n_components=redux)
+	matrix_transform = pca.fit_transform(matrix)
+	err = pca.explained_variance_ratio_
 	t5 = time()
 	printc(f"finished PCA in {t5-t4} seconds","GREEN")
+
+	############################################################################
+	################### Dimensional Reduction via PCA  #########################
+	############################################################################
+	printc(f"RUnning KMeans clustering on {type()}")
