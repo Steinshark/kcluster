@@ -121,10 +121,16 @@ if __name__ == "__main__":
     ################### Dimensional Reduction via PCA  #########################
     ############################################################################
     t6 = time()
-    cluster_sizes = list(range(5,10))
+    cluster_sizes = list(range(5,15))
     model = [None for _ in cluster_sizes]
-    printc(f"Running KMeans clustering for {cluster_sizes}","BLUE")
+    printc(f"Starting KMeans","BLUE")
+    printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
     for i,n in enumerate(cluster_sizes):
+        t1 = time()
+        printc(f"\t\tStarting {i}:","TAN")
+
     	model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize)
     	model[i].fit(matrix)
+        printc(f"\t\tFinished {i} in {time()-t1} seconds:","TAN")
+
     	printc(f"\tCluster size {i} inertia: {model[i].inertia_}","TAN")
