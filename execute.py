@@ -6,7 +6,8 @@ from scipy.sparse import lil_matrix, csr_matrix
 from scipy.sparse.linalg import svds
 
 from sklearn.metrics import mean_squared_error
-from sklearn.decomposition import SparsePCA
+from sklearn.decomposition import SparsePCA, IncrementalPCA
+from sklearn.cluster import MiniBatchKMeans
 
 from matplotlib import pyplot as plt
 from time import time
@@ -101,13 +102,21 @@ if __name__ == "__main__":
 	redux = 100
 	print(f'{Color.colors["TAN"]}PCA reduction size: {redux} {Color.colors["END"]}')
 	printc(f"Beginning PCA...","BLUE")
-	pca = SparsePCA(n_components=redux)
-	matrix_transform = pca.fit(matrix)
+	pca = IncrementalPCA(n_components=redux)
+	matrix_transform = pca.fit_transform(matrix)
 	err = pca.explained_variance_ratio_
 	t5 = time()
 	printc(f"finished PCA in {t5-t4} seconds","GREEN")
-
+	printc(f"PCA evr: {err}","GREEN")
 	############################################################################
 	################### Dimensional Reduction via PCA  #########################
 	############################################################################
-	printc(f"RUnning KMeans clustering on {type()}")
+	cluster_sizes = range(5,6)
+	t6 = time()
+	printc(f"RUnning KMeans clustering on matrix ({matrix_transform.shape}) for {cluster_sizes}")
+	bSize = 50000
+	for k in cluster_sizes:
+		model = MiniBatchKMeans(n_clusters=k, batchsize = bSize)
+		model.fit(matrix)
+		#for batch in [0,1,2,3,4,5]:
+		#	model.partial_fit(matrix)
