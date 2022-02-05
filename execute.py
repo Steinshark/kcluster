@@ -115,7 +115,7 @@ if __name__ == "__main__":
         printc(f"trying to perform on {type(matrix[bSize*i, :bSize*(i+1), ])}","TAN")
         printc(f"methods avail: {dir(matrix[bSize*i, :bSize*(i+1), ])}","TAN")
 
-        matrix_transform = pca.partial_fit((matrix[bSize*i, :bSize*(i+1), ]).tomatrix())
+        matrix_transform = pca.partial_fit((matrix[bSize*i, :bSize*(i+1), ]).toarray())
     err = pca.explained_variance_ratio_
     t5 = time()
     printc(f"\tfinished PCA in {t5-t4} seconds\n\n","GREEN")
