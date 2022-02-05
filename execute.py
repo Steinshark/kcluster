@@ -77,54 +77,54 @@ def tf_calc(csr_matr):
 
 
 if __name__ == "__main__":
-	print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-	############################################################################
-	#### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
-	############################################################################
-	printc(f"Starting: Matrix creation","BLUE")
-	t1 = time()
-	matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
-	t2 = time()
-	printc(f"\tMatrix created: {matrix.shape}","TAN")
-	printc(f"\tsize: {matrix.data.size/(1024**2):.2f} MB","TAN")
-	printc(f"\tFinished: matrix creation in {t2-t1} seconds\n\n","GREEN")
+    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    ############################################################################
+    #### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
+    ############################################################################
+    printc(f"Starting: Matrix creation","BLUE")
+    t1 = time()
+    matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
+    t2 = time()
+    printc(f"\tMatrix created: {matrix.shape}","TAN")
+    printc(f"\tsize: {matrix.data.size/(1024**2):.2f} MB","TAN")
+    printc(f"\tFinished: matrix creation in {t2-t1} seconds\n\n","GREEN")
 
 
-	############################################################################
-	################## Calculate the SVD for the matrix ########################
-	############################################################################
-	printc(f"Starting: SVD CALC","BLUE")
-	k = 150
-	printc(f"\tUsing k value of {k}","TAN")
+    ############################################################################
+    ################## Calculate the SVD for the matrix ########################
+    ############################################################################
+    printc(f"Starting: SVD CALC","BLUE")
+    k = 150
+    printc(f"\tUsing k value of {k}","TAN")
 
-	U, S, Vt = svds(matrix,k=k)
-	t3 = time()
-	printc(f"\tU: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","TAN")
-	printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
+    U, S, Vt = svds(matrix,k=k)
+    t3 = time()
+    printc(f"\tU: {U.shape}, S: {S.shape}, Vt: {Vt.shape}","TAN")
+    printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
 
-	############################################################################
-	################### Dimensional Reduction via PCA  #########################
-	############################################################################
-	t4 = time()
-	redux = 100
-	bSize = 50000
-	printc(f"Starting PCA","BLUE")
-	print(f'{Color.colors["TAN"]}\tPCA reduction to {redux} {Color.colors["END"]}')
-	pca = IncrementalPCA(n_components=redux,batch_size=bSize)
+    ############################################################################
+    ################### Dimensional Reduction via PCA  #########################
+    ############################################################################
+    t4 = time()
+    redux = 100
+    bSize = 50000
+    printc(f"Starting PCA","BLUE")
+    print(f'{Color.colors["TAN"]}\tPCA reduction to {redux} {Color.colors["END"]}')
+    pca = IncrementalPCA(n_components=redux,batch_size=bSize)
     for i in [0,1,2,3,4,5]:
         matrix_transform = pca.partial_fit(matrix[bSize*i:bSize*(i+1)])
-	err = pca.explained_variance_ratio_
-	t5 = time()
-	printc(f"\tfinished PCA in {t5-t4} seconds\n\n","GREEN")
-	#printc(f"PCA evr: {err}\n\n","GREEN")
-	############################################################################
-	################### Dimensional Reduction via PCA  #########################
-	############################################################################
-	t6 = time()
-	cluster_sizes = list(range(5,10))
-	model = [None for _ in cluster_sizes]
-	printc(f"Running KMeans clustering for {cluster_sizes}","BLUE")
-	for i,n in enumerate(cluster_sizes):
-		model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize)
-		model[i].fit(matrix)
-		printc(f"\tCluster size {i} inertia: {model[i].inertia_}","TAN")
+    err = pca.explained_variance_ratio_
+    t5 = time()
+    printc(f"\tfinished PCA in {t5-t4} seconds\n\n","GREEN")
+    #printc(f"PCA evr: {err}\n\n","GREEN")
+    ############################################################################
+    ################### Dimensional Reduction via PCA  #########################
+    ############################################################################
+    t6 = time()
+    cluster_sizes = list(range(5,10))
+    model = [None for _ in cluster_sizes]
+    printc(f"Running KMeans clustering for {cluster_sizes}","BLUE")
+    for i,n in enumerate(cluster_sizes):
+    	model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize)
+    	model[i].fit(matrix)
+    	printc(f"\tCluster size {i} inertia: {model[i].inertia_}","TAN")
