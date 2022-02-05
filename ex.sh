@@ -8,4 +8,4 @@
 #SBATCH --partition=hpc
 
 cd /home/m226252/kcluster
-python3 naive.py
+python3 execute.py
