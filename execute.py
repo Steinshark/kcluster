@@ -98,7 +98,7 @@ if __name__ == "__main__":
 	################### Dimensional Reduction via PCA  #########################
 	############################################################################
 	t4 = time()
-	input(f'{Color.colors["TAN"]}PCA reduction size: {Color.colors["END"]}')
+	print(f'{Color.colors["TAN"]}PCA reduction size: {Color.colors["END"]}')
 	printc(f"Beginning PCA...","BLUE")
 	matrix_reduced = PCA()
 	t5 = time()
