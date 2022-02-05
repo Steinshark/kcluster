@@ -12,11 +12,17 @@ from sklearn.cluster import MiniBatchKMeans
 from matplotlib import pyplot as plt
 from time import time
 
+
+import cupy as cp
+from cupyx.scipy.sparse import csr_matrix as csr_gpu
+
+
+
 from colors import *
 #path        = r'/mnt/beegfs/m226252/clustering'
-docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
+#docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
-#docNYT      = fr'newData'
+docNYT      = fr'newData'
 #docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
@@ -65,7 +71,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
 		t4 = time()
 		printc(f"\tFinished docword read of {ln_words_total} words in {t4-t3} seconds","TAN")
 
-	return matrix.tocsr(), docwords
+	return matrix.csr_gpu(), docwords
 
 
 def tf_calc(csr_matr):
@@ -87,10 +93,10 @@ if __name__ == "__main__":
 	############################################################################
 	printc(f"Starting: Matrix creation","BLUE")
 	t1 = time()
-	matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
+	gpu_matrix, docwords = create_csr_matrix(docNYT,header=3,verbose=True)
 	t2 = time()
-	printc(f"\tMatrix created: {matrix.shape}","TAN")
-	printc(f"\tsize: {matrix.data.size/(1024**2):.2f} MB","TAN")
+	printc(f"\tMatrix created: {gpu_matrix.shape}","TAN")
+	printc(f"\tsize: {gpu_matrix.data.size/(1024**2):.2f} MB","TAN")
 	printc(f"\tFinished: matrix creation in {t2-t1} seconds\n\n","GREEN")
 
 
