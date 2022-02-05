@@ -116,7 +116,7 @@ if __name__ == "__main__":
 	t6 = time()
 	printc(f"RUnning KMeans clustering on matrix ({matrix_transform.shape}) for {cluster_sizes}")
 	for k in cluster_sizes:
-		model = MiniBatchKMeans(n_clusters=k, batchsize = bSize)
+		model = MiniBatchKMeans(n_clusters=k, batch_size = bSize)
 		model.fit(matrix)
 		#for batch in [0,1,2,3,4,5]:
 		#	model.partial_fit(matrix)
