@@ -11,13 +11,17 @@ from sklearn.cluster import MiniBatchKMeans
 
 from matplotlib import pyplot as plt
 from time import time
-
+import sys
 from colors import *
 #path        = r'/mnt/beegfs/m226252/clustering'
-docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
+try:
+    if sys.argv[1] == 'hpc':
+        docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
+except:
+    docNYT	     = fr"docword.nytimes.txt"
+
 #vocabNYT    = fr'{path}/vocab.nytimes.txt'
 #docNYT      = fr'newData'
-#docNYT	     = fr"docword.nytimes.txt"
 vocabNYT    = fr'vocab.nytimes.txt'
 
 def printc(s,color):
@@ -83,6 +87,7 @@ def svd_calc(sparse_matrix,k=150,verbose=False):
 
 
 if __name__ == "__main__":
+
     print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
     ############################################################################
     #### build our sparce matrix and a dictionary of docID -> words_in_doc  ####
@@ -109,7 +114,7 @@ if __name__ == "__main__":
     per_var = []
     n_val   = []
     t_comp  = []
-    for n in np.arange(400,800,50):
+    for n in np.arange(3000,5500,500):
         t1 = time()
         printc(f"\ttrying n={n}","TAN")
         tsvd = TruncatedSVD(n_components=n)
