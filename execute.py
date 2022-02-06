@@ -106,12 +106,24 @@ if __name__ == "__main__":
     ################### Dimensional Reduction via PCA  #########################
     ############################################################################
     printc(f"Starting: reduction via SVD","BLUE")
+    per_var = []
+    n_val   = []
+    t_comp  = []
+    for n in np.arange(50,450,50):
+        t1 = time()
+        printc(f"\ttrying n={n}","TAN")
+        tsvd = TruncatedSVD(n_components=n)
+        a = tsvd.fit_transform(matrix)
+        printc(f"\tmatrix reduced to: {a.shape}","TAN")
+        printc(f"\tvariance: {tsvd.explained_variance_ratio_[0]:.4f}...{tsvd.explained_variance_ratio_[-1]:.4f}","TAN")
+        printc(f"\tvariance accounted for: {tsvd.explained_variance_ratio_.sum()}","TAN")
+        per_var.append(tsvd.explained_variance_ratio_.sum())
+        n_val.append(n)
+        t_comp.append((time()-t1)/3600)
 
-    tsvd = TruncatedSVD(n_components=100)
-    a = tsvd.fit_transform(matrix)
-    printc(f"\t{a.shape}","TAN")
-    printc(f"\t{tsvd.explained_variance_ratio_}","TAN")
-    printc(f"\treturned: {type(a)}","TAN")
+    plt.plot(n_val,per_var,'r--')
+    plt.scatter(n_val,t_comp,s=2)
+    plt.show()
 
     ############################################################################
     ########################## KMeans analysis  ################################
@@ -119,7 +131,7 @@ if __name__ == "__main__":
     t6 = time()
     bSize = 50000
 
-    cluster_sizes = list(np.arange(1000,5000,500))
+    cluster_sizes = [1]
     model = [None for _ in cluster_sizes]
     printc(f"Starting KMeans","BLUE")
     printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
