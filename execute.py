@@ -76,7 +76,7 @@ def create_csr_matrix(filename,header=3,verbose=False):
 
 def save_sparse_to_file(matrix):
 
-    filename = f"{arr.shape}.csv"
+    filename = f"{matrix.shape}.csv"
     dataframe = pd.DataFrame(matrix)
     dataframe.to_csv("matrix_save.csv",index=False,header=None)
 
