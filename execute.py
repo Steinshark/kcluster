@@ -80,7 +80,7 @@ def save_sparse_to_file(matrix):
     dataframe.to_csv("matrix_save.csv",index=False,header=None)
 
 
-read_
+
 def svd_calc(sparse_matrix,k=150,verbose=False):
     if verbose:
         printc(f"Starting: SVD CALC","BLUE")
