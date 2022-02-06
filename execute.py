@@ -52,7 +52,8 @@ def create_csr_matrix(filename,header=3,verbose=False):
 
 
     	# initialize an lil matrix (faster to fill)
-    	matrix = lil_matrix((rows,cols), dtype = np.float64)
+
+    	matrix = lil_matrix( (rows,cols), dtype = np.float64)
 
 
     	# Step through each article and see which word appeared in it
@@ -74,9 +75,9 @@ def create_csr_matrix(filename,header=3,verbose=False):
     return matrix.tocsr(), docwords
 
 def save_sparse_to_file(matrix):
-    arr = matrix.toarray()
+
     filename = f"{arr.shape}.csv"
-    dataframe = pd.DataFrame(arr)
+    dataframe = pd.DataFrame(matrix)
     dataframe.to_csv("matrix_save.csv",index=False,header=None)
 
 
@@ -129,7 +130,12 @@ if __name__ == "__main__":
         a = tsvd.fit_transform(matrix)
         printc(f"\tmatrix reduced to: {a.shape}","TAN")
         printc(f"\tvar: {tsvd.explained_variance_ratio_.sum(): .4f} in {time()-t1} ","TAN")
+
+
+    printc(f"Starting file save of Matrix: {a.shape}","BLUE")
     save_sparse_to_file(a)
+    printc(f"\tsaved","TAN")
+
     ############################################################################
     ########################## KMeans analysis  ################################
     ############################################################################
