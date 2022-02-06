@@ -114,7 +114,7 @@ if __name__ == "__main__":
     per_var = []
     n_val   = []
     t_comp  = []
-    for n in [3000]:
+    for n in [2000]:
         t1 = time()
         printc(f"\ttrying n={n}","TAN")
         tsvd = TruncatedSVD(n_components=n)
