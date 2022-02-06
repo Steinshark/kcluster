@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 from time import time
 import sys
 from colors import *
-#path        = r'/mnt/beegfs/m226252/clustering'
+path        = r'/mnt/beegfs/m226252/clustering'
 if sys.argv[1] == 'hpc':
     docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
 elif sys.argv[1] == 'full':
