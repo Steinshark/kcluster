@@ -17,6 +17,8 @@ from colors import *
 try:
     if sys.argv[1] == 'hpc':
         docNYT      = fr'/mnt/beegfs/m226252/clustering/docword.nytimes.txt'
+    elif sys.argv[1] == 'new':
+        docNYT = 'newData'
 except:
     docNYT	     = fr"docword.nytimes.txt"
 
@@ -71,7 +73,14 @@ def create_csr_matrix(filename,header=3,verbose=False):
 
     return matrix.tocsr(), docwords
 
+def save_sparse_to_file(matrix):
+    arr = matrix.toarray()
+    filename = f"{arr.shape}.csv"
+    dataframe = pd.DataFrame(arr)
+    dataframe.to_csv("matrix_save.csv",index=False,header=None)
 
+
+read_
 def svd_calc(sparse_matrix,k=150,verbose=False):
     if verbose:
         printc(f"Starting: SVD CALC","BLUE")
@@ -104,7 +113,6 @@ if __name__ == "__main__":
     ############################################################################
     ################## Calculate the SVD for the matrix ########################
     ############################################################################
-
     #U, S, Vt = svd_calc(matrix,k=50,verbose=True)
 
     ############################################################################
@@ -114,21 +122,21 @@ if __name__ == "__main__":
     per_var = []
     n_val   = []
     t_comp  = []
-    for n in [2000]:
+    for n in [4000]:
         t1 = time()
         printc(f"\ttrying n={n}","TAN")
         tsvd = TruncatedSVD(n_components=n)
         a = tsvd.fit_transform(matrix)
         printc(f"\tmatrix reduced to: {a.shape}","TAN")
         printc(f"\tvar: {tsvd.explained_variance_ratio_.sum(): .4f} in {time()-t1} ","TAN")
-    exit()
+    save_sparse_to_file(a)
     ############################################################################
     ########################## KMeans analysis  ################################
     ############################################################################
     t6 = time()
     bSize = 50000
 
-    cluster_sizes = [1]
+    cluster_sizes = [100]
     model = [None for _ in cluster_sizes]
     printc(f"Starting KMeans","BLUE")
     printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
