@@ -109,21 +109,13 @@ if __name__ == "__main__":
     per_var = []
     n_val   = []
     t_comp  = []
-    for n in np.arange(50,450,50):
+    for n in np.arange(400,800,50):
         t1 = time()
         printc(f"\ttrying n={n}","TAN")
         tsvd = TruncatedSVD(n_components=n)
         a = tsvd.fit_transform(matrix)
         printc(f"\tmatrix reduced to: {a.shape}","TAN")
-        printc(f"\tvariance: {tsvd.explained_variance_ratio_[0]:.4f}...{tsvd.explained_variance_ratio_[-1]:.4f}","TAN")
-        printc(f"\tvariance accounted for: {tsvd.explained_variance_ratio_.sum()}","TAN")
-        per_var.append(tsvd.explained_variance_ratio_.sum())
-        n_val.append(n)
-        t_comp.append((time()-t1)/3600)
-
-    plt.plot(n_val,per_var,'r--')
-    plt.scatter(n_val,t_comp,s=2)
-    plt.show()
+        printc(f"\tvar: {tsvd.explained_variance_ratio_.sum(): .4f} in {time()-t1} ","TAN")
 
     ############################################################################
     ########################## KMeans analysis  ################################
