@@ -121,7 +121,7 @@ if __name__ == "__main__":
         a = tsvd.fit_transform(matrix)
         printc(f"\tmatrix reduced to: {a.shape}","TAN")
         printc(f"\tvar: {tsvd.explained_variance_ratio_.sum(): .4f} in {time()-t1} ","TAN")
-    return
+    exit()
     ############################################################################
     ########################## KMeans analysis  ################################
     ############################################################################
