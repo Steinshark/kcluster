@@ -140,17 +140,17 @@ def svd_calc(sparse_matrix,k=150,verbose=False):
         printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
     return U,S,Vt
 
-def run_kmeans_verbose(matrix,i):
+def run_kmeans_verbose(matrix,l):
     t1 = time()
     bSize = 10000
     printc(f"Starting KMeans","BLUE")
     a = matrix
-    for i in np.arange(100,500,100):
+    for i in np.arange(1000,2000,1000):
         t2 = time()
         printc(f"\tStarting k={i} on {a.shape}:","TAN")
         model = MiniBatchKMeans(n_clusters=i, batch_size = bSize,n_init=3)
         model.fit(a)
-        printc(f"\tFinished k=i{i} in {time()-t2} seconds:","TAN")
+        printc(f"\tFinished k={i} in {time()-t2} seconds:","TAN")
         printc(f"\t\tk={i} inertia: {model.inertia_}","TAN")
     printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
     #np.save("centers",model.cluster_centers_)
