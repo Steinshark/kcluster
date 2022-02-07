@@ -140,12 +140,12 @@ def svd_calc(sparse_matrix,k=150,verbose=False):
         printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
     return U,S,Vt
 
-def run_kmeans_verbose(matrix,l):
+def run_kmeans_verbose(matrix,move):
     t1 = time()
     bSize = 10000
     printc(f"Starting KMeans","BLUE")
     a = matrix
-    for i in np.arange(1000,2000,1000):
+    for i in move:
         t2 = time()
         printc(f"\tStarting k={i} on {a.shape}:","TAN")
         model = MiniBatchKMeans(n_clusters=i, batch_size = bSize,n_init=3)
@@ -240,8 +240,8 @@ else:
         m_red = verbose_svd_decomp(m,n)
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
     printc(f"post SVD shape: {m_red.shape}\n","BLUE")
-
-    model = run_kmeans_verbose(m_red,k_start)
+    move = np.arange(k_start,k_end,k_inc)
+    model = run_kmeans_verbose(m_red,move)
 
     #printc(f"Starting kmeans","BLUE")
     #t= time()
