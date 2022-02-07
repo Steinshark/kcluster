@@ -156,14 +156,15 @@ def run_kmeans_verbose(matrix,move):
         printc(f"\tStarting k={k} on {a.shape}:","BLUE")
         model = MiniBatchKMeans(n_clusters=k, batch_size = bSize,n_init=3)
         model.fit(a)
-        printc(f"\tFinished k={k} in {time()-t2} seconds:","TAN")
+        printc(f"\t\tcomputed model k={k} in {time()-t2} seconds:","TAN")
         printc(f"\t\tk={k} inertia: {model.inertia_}","TAN")
         models[k]['inertia'] = model.inertia_
         models[k]["centers"] = model.cluster_centers_
         models[k]['d_to_c'] = model.predict(a)
-        printc(f"\tpredict finished - writing files","GREEN")
+        printc(f"\t\tpredict finished - writing files","TAN")
         np.save(f"data/{k}_centers",models[k]['centers'])
         np.save(f"data/{k}_d_to_clusters",models[k]['d_to_c'])
+        printc(f"\t\tFinished model in {time()-t2} seconds","GREEN")
 
     return models
     printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
