@@ -241,5 +241,9 @@ else:
     printc(f"post SVD shape: {m_red.shape}\n","BLUE")
 
     model = run_kmeans_verbose(m_red,k_start)
+
+    printc(f"Starting kmeans","BLUE")
+    t= time()
     doc_to_cluster = model.predict(m_red)
+    printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
     np.save("doc_to_cluster",model.predict(m_red))
