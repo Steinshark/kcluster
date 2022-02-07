@@ -135,28 +135,21 @@ def svd_calc(sparse_matrix,k=150,verbose=False):
         printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
     return U,S,Vt
 
-def run_kmeans_verbose(matrix,cluster_sizes):
+def run_kmeans_verbose(matrix,i):
     t1 = time()
     bSize = 50000
-    model = [None for _ in cluster_sizes]
-    k_vals = list(cluster_sizes)
-    k_to_inertia = {}
     printc(f"Starting KMeans","BLUE")
     printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
     a = matrix
-    for i,n in enumerate(cluster_sizes):
-        t2 = time()
-        printc(f"\t\tStarting {i}:","TAN")
-        model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
-        model[i].fit(a)
-        printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
-        k_to_inertia[float(n)] = float(model[i].inertia_)
-        printc(f"\t{n} clusters inertia: {model[i].inertia_}","TAN")
+    t2 = time()
+    printc(f"\t\tStarting {i}:","TAN")
+    model = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
+    model.fit(a)
+    printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
+    printc(f"\t{n} clusters inertia: {model.inertia_}","TAN")
     printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
-    save = dumps(k_to_inertia)
-    f = open('inertia_graph.json','w')
-    f.write(save)
-    f.close()
+    np.save("centers",model.cluster_centers_)
+
 
 if not __name__ == "__main__":
 
@@ -245,4 +238,4 @@ else:
 
 
     k_vals = np.arange(k_start,k_end,k_inc)
-    run_kmeans_verbose(m_red,k_vals)
+    run_kmeans_verbose(m_red,k_start)
