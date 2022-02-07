@@ -25,12 +25,12 @@ else:
 
 vocabNYT    = fr'vocab.nytimes.txt'
 if __name__ == "__main__":
-    w_file = open("out",'w')
+    w_file = open("out1",'w')
     w_file.write("\n")
     w_file.close()
 
 def printc(s,color):
-    w_file.open("out",'a')
+    w_file.open("out1",'a')
     wfile.write(f"{Color.colors[color]}{s}{Color.colors['END']}")
     w_file.close()
 def create_csr_matrix(filename,header=3,verbose=False,npzname=None):
