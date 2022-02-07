@@ -140,7 +140,7 @@ def run_kmeans_verbose(matrix,cluster_sizes):
     model = [None for _ in cluster_sizes]
     printc(f"Starting KMeans","BLUE")
     printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
-
+    a = matrix
     for i,n in enumerate(cluster_sizes):
         t2 = time()
         printc(f"\t\tStarting {i}:","TAN")
