@@ -145,15 +145,16 @@ def run_kmeans_verbose(matrix,i):
     bSize = 10000
     printc(f"Starting KMeans","BLUE")
     a = matrix
-    t2 = time()
-    printc(f"\t\tStarting k={i} on {a.shape}:","TAN")
-    model = MiniBatchKMeans(n_clusters=i, batch_size = bSize,n_init=3)
-    model.fit(a)
-    printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
-    printc(f"\t{n} clusters inertia: {model.inertia_}","TAN")
+    for i in np.arange(100,500,100):
+        t2 = time()
+        printc(f"\tStarting k={i} on {a.shape}:","TAN")
+        model = MiniBatchKMeans(n_clusters=i, batch_size = bSize,n_init=3)
+        model.fit(a)
+        printc(f"\tFinished k=i{i} in {time()-t2} seconds:","TAN")
+        printc(f"\t\tk={i} inertia: {model.inertia_}","TAN")
     printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
-    np.save("centers",model.cluster_centers_)
-    return model
+    #np.save("centers",model.cluster_centers_)
+    #return model
 
 if not __name__ == "__main__":
 
@@ -242,9 +243,9 @@ else:
 
     model = run_kmeans_verbose(m_red,k_start)
 
-    printc(f"Starting kmeans","BLUE")
-    t= time()
-    doc_to_cluster = model.predict(m_red)
-    printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
-    printc(f"{doc_to_cluster[:2]}","TAN")
-    np.save("doc_to_cluster",model.predict(m_red))
+    #printc(f"Starting kmeans","BLUE")
+    #t= time()
+    #doc_to_cluster = model.predict(m_red)
+    #printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
+    #printc(f"{doc_to_cluster[:2]}","TAN")
+    #np.save("doc_to_cluster",model.predict(m_red))
