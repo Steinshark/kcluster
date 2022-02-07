@@ -5,6 +5,7 @@ import pandas as pd
 from scipy.sparse import lil_matrix, csr_matrix, load_npz, save_npz
 from scipy.sparse.linalg import svds
 import scipy
+from json import dumps
 
 from sklearn.metrics import mean_squared_error
 from sklearn.decomposition import SparsePCA, IncrementalPCA, TruncatedSVD
@@ -138,6 +139,8 @@ def run_kmeans_verbose(matrix,cluster_sizes):
     t1 = time()
     bSize = 50000
     model = [None for _ in cluster_sizes]
+    k_vals = list(cluster_sizes)
+    k_to_inertia = {}
     printc(f"Starting KMeans","BLUE")
     printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
     a = matrix
@@ -147,10 +150,13 @@ def run_kmeans_verbose(matrix,cluster_sizes):
         model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
         model[i].fit(a)
         printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
-
+        k_to_inertia[n] = model[i].inertia_
         printc(f"\t{n} clusters inertia: {model[i].inertia_}","TAN")
-
-    printc(f"\t\tfinished all k clusters in {t1-time()} seconds")
+    printc(f"\t\tfinished all k clusters in {t1-time()} seconds","TAN")
+    save = dumps(k_to_inertia)
+    f = open('inertia_graph.json','w')
+    f.write(save)
+    f.close()
 
 if not __name__ == "__main__":
 
