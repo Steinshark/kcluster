@@ -150,9 +150,9 @@ def run_kmeans_verbose(matrix,cluster_sizes):
         model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
         model[i].fit(a)
         printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
-        k_to_inertia[n] = model[i].inertia_
+        k_to_inertia[n] = float(model[i].inertia_)
         printc(f"\t{n} clusters inertia: {model[i].inertia_}","TAN")
-    printc(f"\t\tfinished all k clusters in {t1-time()} seconds","TAN")
+    printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
     save = dumps(k_to_inertia)
     f = open('inertia_graph.json','w')
     f.write(save)
