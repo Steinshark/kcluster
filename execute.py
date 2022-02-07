@@ -158,10 +158,10 @@ def run_kmeans_verbose(matrix,move):
         model.fit(a)
         printc(f"\tFinished k={k} in {time()-t2} seconds:","TAN")
         printc(f"\t\tk={k} inertia: {model.inertia_}","TAN")
-        models[k][inertia] = model.inertia_
+        models[k]['inertia'] = model.inertia_
         models[k]["centers"] = model.cluster_centers_
         models[k]['d_to_c'] = model.predict(a)
-
+        printc(f"\tpredict finished - writing files","BLUE")
         np.save(f"/data/{k}_centers",models[k]['centers'])
         np.save(f"/data/{k}_d_to_clusters",models[k]['d_to_c'])
 
@@ -247,18 +247,18 @@ else:
     m,dw = verbose_read(npz_in_name=raw_data_name,save=saving_raw_data,filename='preSVD')
 
     if loading_svd:
-        printc(f"loading in precomputed SVD matrix","GREEN")
+        printc(f"\tloading in precomputed SVD matrix","GREEN")
         m_red = load_svd_decomp(f"decomp_to_{n}.npy")
     else:
         m_red = verbose_svd_decomp(m,n)
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
-    printc(f"post SVD shape: {m_red.shape}\n","BLUE")
+    printc(f"\tpost SVD shape: {m_red.shape}\n","BLUE")
     move = np.arange(k_start,k_end,k_inc)
     models = run_kmeans_verbose(m_red,move)
 
 
 
-    printc(f"Starting kmeans","BLUE")
+    printc(f"\tStarting kmeans","BLUE")
     t= time()
     doc_to_cluster = model.predict(m_red)
     printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
