@@ -24,9 +24,10 @@ else:
     docNYT = 'newData'
 
 vocabNYT    = fr'vocab.nytimes.txt'
-w_file = open("out",'w')
-w_file.write("\n")
-w_file.close()
+if __name__ == "__main__":
+    w_file = open("out",'w')
+    w_file.write("\n")
+    w_file.close()
 
 def printc(s,color):
     w_file.open()
