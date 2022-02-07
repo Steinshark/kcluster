@@ -30,9 +30,13 @@ if __name__ == "__main__":
     w_file.close()
 
 def printc(s,color):
-    w_file = open("out1",'a')
-    w_file.write(f"{Color.colors[color]}{s}{Color.colors['END']}\n")
-    w_file.close()
+    if True:
+        w_file = open("out1",'a')
+        w_file.write(f"{Color.colors[color]}{s}{Color.colors['END']}\n")
+        w_file.close()
+    else:
+        print(f"{Color.colors[color]}{s}{Color.colors['END']}\n")
+
 def create_csr_matrix(filename,header=3,verbose=False,npzname=None):
 
     # Import our NYTIMES doc and read the init values
@@ -145,15 +149,23 @@ def run_kmeans_verbose(matrix,move):
     bSize = 10000
     printc(f"Starting KMeans","BLUE")
     a = matrix
-    for i in move:
+    models = {}
+    for k in [50,100,500,1000,5000,10000]:
+        models[k] = {'centers': None, 'd_to_c' : None, 'inertia' : 0}
         t2 = time()
-        printc(f"\tStarting k={i} on {a.shape}:","TAN")
-        model = MiniBatchKMeans(n_clusters=i, batch_size = bSize,n_init=3)
+        printc(f"\tStarting k={k} on {a.shape}:","TAN")
+        model = MiniBatchKMeans(n_clusters=k, batch_size = bSize,n_init=3)
         model.fit(a)
-        printc(f"\tFinished k={i} in {time()-t2} seconds:","TAN")
-        printc(f"\t\tk={i} inertia: {model.inertia_}","TAN")
-        np.save("centers",model.cluster_centers_)
-        return model
+        printc(f"\tFinished k={k} in {time()-t2} seconds:","TAN")
+        printc(f"\t\tk={k} inertia: {model.inertia_}","TAN")
+        models[k][inertia] = model.inertia_
+        models[k]["centers"] = model.cluster_centers_
+        models[k]['d_to_c'] = model.predict(a)
+
+        np.save(f"/data/{k}_centers",models[k]['centers'])
+        np.save(f"/data/{k}_d_to_clusters",models[k]['d_to_c'])
+
+    return models
     printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
 
 if not __name__ == "__main__":
@@ -235,13 +247,16 @@ else:
     m,dw = verbose_read(npz_in_name=raw_data_name,save=saving_raw_data,filename='preSVD')
 
     if loading_svd:
+        printc(f"loading in precomputed SVD matrix","GREEN")
         m_red = load_svd_decomp(f"decomp_to_{n}.npy")
     else:
         m_red = verbose_svd_decomp(m,n)
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
     printc(f"post SVD shape: {m_red.shape}\n","BLUE")
     move = np.arange(k_start,k_end,k_inc)
-    model = run_kmeans_verbose(m_red,move)
+    models = run_kmeans_verbose(m_red,move)
+
+
 
     printc(f"Starting kmeans","BLUE")
     t= time()
