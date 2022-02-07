@@ -139,7 +139,6 @@ def run_kmeans_verbose(matrix,i):
     t1 = time()
     bSize = 50000
     printc(f"Starting KMeans","BLUE")
-    printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
     a = matrix
     t2 = time()
     printc(f"\t\tStarting {i}:","TAN")
