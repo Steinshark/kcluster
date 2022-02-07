@@ -134,6 +134,23 @@ def svd_calc(sparse_matrix,k=150,verbose=False):
         printc(f"\tFinished: SVD CALC in  {t3-t2} seconds\n\n","GREEN")
     return U,S,Vt
 
+def run_kmeans_verbose(matrix,cluster_sizes):
+    t1 = time()
+    bSize = 50000
+    model = [None for _ in cluster_sizes]
+    printc(f"Starting KMeans","BLUE")
+    printc(f"\tRunning k-vals of: {cluster_sizes}","BLUE")
+
+    for i,n in enumerate(cluster_sizes):
+        t2 = time()
+        printc(f"\t\tStarting {i}:","TAN")
+        model[i] = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
+        model[i].fit(a)
+        printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
+
+        printc(f"\t{n} clusters inertia: {model[i].inertia_}","TAN")
+
+    printc(f"\t\tfinished all k clusters in {t1-time()} seconds")
 
 if not __name__ == "__main__":
 
@@ -201,9 +218,14 @@ if not __name__ == "__main__":
 
 else:
     n = int(sys.argv[2])
-    raw_data_name = sys.argv[3]
-    saving_raw_data = sys.argv[4] in ["T",'t']
-    loading_svd = sys.argv[5] in ['T','t']
+    raw_data_name   =       sys.argv[3]
+    saving_raw_data =       sys.argv[4] in ["T",'t']
+    loading_svd     =       sys.argv[5] in ['T','t']
+    k_start         = int(  sys.argv[6])
+    k_end           = int(  sys.argv[7])
+    k_inc           = int(  sys.argv[8])
+
+
 
     print (f"looking for words in: {raw_data_name}")
     m,dw = verbose_read(npz_in_name=raw_data_name,save=saving_raw_data,filename='preSVD')
@@ -214,3 +236,7 @@ else:
         m_red = verbose_svd_decomp(m,n)
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
     print(f"post SVD shape: {m_red.shape}")
+
+
+    k_vals = np.arange(k_start,k_end,k_inc)
+    run_kmeans_verbose(m_red,k_vals)
