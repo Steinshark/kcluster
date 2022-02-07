@@ -146,7 +146,7 @@ def run_kmeans_verbose(matrix,i):
     printc(f"Starting KMeans","BLUE")
     a = matrix
     t2 = time()
-    printc(f"\t\tStarting {i} on {a.shape}:","TAN")
+    printc(f"\t\tStarting k={i} on {a.shape}:","TAN")
     model = MiniBatchKMeans(n_clusters=i, batch_size = bSize,n_init=3)
     model.fit(a)
     printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
@@ -246,4 +246,5 @@ else:
     t= time()
     doc_to_cluster = model.predict(m_red)
     printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
+    printc(f"{doc_to_cluster[:2]}","TAN")
     np.save("doc_to_cluster",model.predict(m_red))
