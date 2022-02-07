@@ -28,7 +28,7 @@ if __name__ == "__main__":
     print("done")
     doc_to_cluster = {None for _ in range(documents.shape[0])}
 
-    centers = np.array(loads('inertia_graph.json'))
+    centers = np.load('centers.npy')
     print(f"shape centers: {centers.shape}")
     doc_num = 0
     for doc in documents:
