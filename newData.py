@@ -5,7 +5,7 @@ file_write = open("newData","w")
 size  = int(input("num docs: "))
 file_write.write(f"{size}\n")
 file_write.write(f"{102660}\n")
-file_write.write(f"{69679427}\n")
+file_write.write(f"{69000000}\n")
 
 file.readline()
 file.readline()
