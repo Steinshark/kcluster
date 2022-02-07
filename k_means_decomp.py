@@ -12,36 +12,19 @@ from time import time
 import sys
 from colors import *
 
-
+def printc(s,color):
+    print(f"{Color.colors[color]}{s}{Color.colors['END']}\n")
 
 def load_svd_decomp(filename):
     return np.load(filename)
 
 
 if __name__ == "__main__":
-    fname = f"decomp_to_3500.npy"
+    clusters = np.load('doc_to_cluster.npy')
+    printc(f"loaded shape {clusters.shape}","GREEN")
 
-    print("loading  docs")
-    documents = load_svd_decomp(fname)
-    print(f"shape docs: {documents.shape}")
+    doc_to_cluster = {i : clusters[i] for i in range(300000)}
 
-    print("done")
-    doc_to_cluster = {None for _ in range(documents.shape[0])}
-
-    centers = np.load('centers.npy')
-    print(f"shape centers: {centers.shape}")
-    doc_num = 0
-    for doc in documents:
-        min_cluster = None
-        min_dist    = 1000000
-
-        for cluster in centers:
-             dist = np.linalg.norm(cluster-doc)
-             if dist < min_dist:
-                 min_dist = dist
-                 min_cluster = cluster
-        doc_to_cluster[doc_num] = min_cluster
-        doc_num += 1
-    f = open("cluster_map",'w')
-    f.write(dumps(doc_to_cluster))
-    f.close()
+    for k in doc_to_cluster:
+        printc(f"{k} -> {doc_to_cluster[k]}","TAN")
+        input()
