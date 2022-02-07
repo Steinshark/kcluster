@@ -152,9 +152,9 @@ def run_kmeans_verbose(matrix,move):
         model.fit(a)
         printc(f"\tFinished k={i} in {time()-t2} seconds:","TAN")
         printc(f"\t\tk={i} inertia: {model.inertia_}","TAN")
+        np.save("centers",model.cluster_centers_)
+        return model
     printc(f"\t\tfinished all k clusters in {time()-t1} seconds","TAN")
-    #np.save("centers",model.cluster_centers_)
-    #return model
 
 if not __name__ == "__main__":
 
@@ -243,9 +243,9 @@ else:
     move = np.arange(k_start,k_end,k_inc)
     model = run_kmeans_verbose(m_red,move)
 
-    #printc(f"Starting kmeans","BLUE")
-    #t= time()
-    #doc_to_cluster = model.predict(m_red)
-    #printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
-    #printc(f"{doc_to_cluster[:2]}","TAN")
-    #np.save("doc_to_cluster",model.predict(m_red))
+    printc(f"Starting kmeans","BLUE")
+    t= time()
+    doc_to_cluster = model.predict(m_red)
+    printc(f"Found clusters: {doc_to_cluster.shape} in {time()-t}","GREEN")
+    printc(f"{doc_to_cluster[:2]}","TAN")
+    np.save("doc_to_cluster",model.predict(m_red))
