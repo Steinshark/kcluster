@@ -6,7 +6,6 @@ from scipy.sparse.linalg import svds
 import scipy
 from json import dumps, loads
 
-import cupy
 
 from matplotlib import pyplot as plt
 from time import time
@@ -16,7 +15,7 @@ from colors import *
 
 
 def load_svd_decomp(filename):
-    return cupy.array(np.load(filename))
+    return np.load(filename)
 
 
 if __name__ == "__main__":
@@ -29,7 +28,7 @@ if __name__ == "__main__":
     print("done")
     doc_to_cluster = {None for _ in range(documents.shape[0])}
 
-    centers = cupy.array(loads('inertia_graph.json'))
+    centers = np.array(loads('inertia_graph.json'))
     print(f"shape centers: {centers.shape}")
     doc_num = 0
     for doc in documents:
@@ -37,10 +36,12 @@ if __name__ == "__main__":
         min_dist    = 1000000
 
         for cluster in centers:
-             dist = cupy.linalg.norm(cluster-doc)
+             dist = np.linalg.norm(cluster-doc)
              if dist < min_dist:
                  min_dist = dist
                  min_cluster = cluster
-        printc(f"finished {doc_num}")
         doc_to_cluster[doc_num] = min_cluster
         doc_num += 1
+    f = open("cluster_map",'w')
+    f.write(dumps(doc_to_cluster))
+    f.close()
