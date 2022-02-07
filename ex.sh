@@ -4,8 +4,8 @@
 #SBATCH --output=out.txt
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=20
-#SBATCH --time=10:00
+#SBATCH --time=1:00:00
 #SBATCH --partition=hpc
 
 cd /home/m226252/kcluster
-python3 execute.py
+python3 execute.py full 3500 none f t 1 2 1 

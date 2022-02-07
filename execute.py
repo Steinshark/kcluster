@@ -238,7 +238,7 @@ else:
     else:
         m_red = verbose_svd_decomp(m,n)
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
-    printc(f"post SVD shape: {m_red.shape}","BLUE")
+    printc(f"post SVD shape: {m_red.shape}\n","BLUE")
 
-    printc(f"trying kMeans on shape {m_red.shape} for k={k_start}")
+    printc(f"trying kMeans on shape {m_red.shape} for k={k_start}\n","BLUE")
     run_kmeans_verbose(m_red,k_start)
