@@ -24,10 +24,14 @@ else:
     docNYT = 'newData'
 
 vocabNYT    = fr'vocab.nytimes.txt'
+w_file = open("out",'w')
+w_file.write("\n")
+w_file.close()
 
 def printc(s,color):
-    print(f"{Color.colors[color]}{s}{Color.colors['END']}")
-
+    w_file.open()
+    wfile.write(f"{Color.colors[color]}{s}{Color.colors['END']}")
+    w_file.close()
 def create_csr_matrix(filename,header=3,verbose=False,npzname=None):
 
     # Import our NYTIMES doc and read the init values
@@ -225,7 +229,7 @@ else:
 
 
 
-    print (f"looking for words in: {raw_data_name}")
+    printc(f"looking for words in: {raw_data_name}","BLUE")
     m,dw = verbose_read(npz_in_name=raw_data_name,save=saving_raw_data,filename='preSVD')
 
     if loading_svd:
@@ -233,8 +237,7 @@ else:
     else:
         m_red = verbose_svd_decomp(m,n)
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
-    print(f"post SVD shape: {m_red.shape}")
+    printc(f"post SVD shape: {m_red.shape}","BLUE")
 
-
-    k_vals = np.arange(k_start,k_end,k_inc)
+    printc(f"trying kMeans on shape {m_red.shape} for k={k_start}")
     run_kmeans_verbose(m_red,k_start)
