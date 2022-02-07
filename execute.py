@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 def printc(s,color):
     w_file = open("out1",'w')
-    wfile.write(f"{Color.colors[color]}{s}{Color.colors['END']}")
+    w_file.write(f"{Color.colors[color]}{s}{Color.colors['END']}")
     w_file.close()
 def create_csr_matrix(filename,header=3,verbose=False,npzname=None):
 
