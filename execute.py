@@ -146,7 +146,7 @@ def run_kmeans_verbose(matrix,i):
     printc(f"Starting KMeans","BLUE")
     a = matrix
     t2 = time()
-    printc(f"\t\tStarting {i}:","TAN")
+    printc(f"\t\tStarting {i} on {a.shape}:","TAN")
     model = MiniBatchKMeans(n_clusters=n, batch_size = bSize,n_init=9)
     model.fit(a)
     printc(f"\t\tFinished {i} in {time()-t2} seconds:","TAN")
@@ -240,5 +240,4 @@ else:
         save_svd_decomp(m_red,f"decomp_to_{n}.npy")
     printc(f"post SVD shape: {m_red.shape}\n","BLUE")
 
-    printc(f"trying kMeans on shape {m_red.shape} for k={k_start}\n","BLUE")
     run_kmeans_verbose(m_red,k_start)
